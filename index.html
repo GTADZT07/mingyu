@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>鸣钰的个人网站</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4/7/k5B+GzO3O5RAwOB1p5MNDoAuCEi0aKBslZx2drXr/7eFA1gZmX2NDVYTHrW82mA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    :root {
+      --bg-color: #121212;
+      --card-color: #1e1e1e;
+      --text-color: #eeeeee;
+      --link-color: #4fc3f7;
+      --note-color: #aaaaaa;
+    }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: var(--bg-color);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      transition: background-color 0.3s;
+    }
+    .card {
+      background: var(--card-color);
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      padding: 24px;
+      max-width: 400px;
+      text-align: center;
+      color: var(--text-color);
+      transition: background 0.3s, color 0.3s;
+    }
+    .avatar {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid #444;
+    }
+    h1 {
+      margin: 16px 0 8px;
+    }
+    p {
+      color: var(--text-color);
+    }
+    .links a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 8px 0;
+      text-decoration: none;
+      color: var(--link-color);
+      font-size: 16px;
+    }
+    .links a i {
+      margin-right: 8px;
+    }
+    .note {
+      font-size: 12px;
+      color: var(--note-color);
+      margin-top: -4px;
+    }
+    .lang-switch, .theme-switch {
+      margin-top: 12px;
+      font-size: 14px;
+      color: var(--link-color);
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <img class="avatar" src="avatar.jpg" alt="头像">
+    <h1 id="name">鸣钰</h1>
+    <p id="bio">咸鱼一条｜东方树叶梦男</p>
+    <div class="links">
+      <a href="https://space.bilibili.com/509224563" target="_blank"><i class="fas fa-tv"></i> Bilibili</a>
+      <a href="https://x.com/GTADZTbuzz" target="_blank"><i class="fab fa-twitter"></i> X: GTADZTbuzz</a>
+      <a href="https://x.com/ChenNuo114514" target="_blank"><i class="fab fa-twitter"></i> X: ChenNuo114514</a>
+      <div class="note" id="note">这是我的树洞</div>
+      <a href="https://t.me/GTADZT" target="_blank"><i class="fab fa-telegram-plane"></i> Telegram @GTADZT</a>
+    </div>
+    <div class="lang-switch" onclick="switchLang()">切换语言｜Switch Language</div>
+    <div class="theme-switch" onclick="toggleTheme()">切换主题｜Toggle Theme</div>
+  </div>
+
+  <script>
+    let zh = true;
+    function switchLang() {
+      zh = !zh;
+      document.getElementById("name").textContent = zh ? "鸣钰" : "Mingyu";
+      document.getElementById("bio").textContent = zh ? "咸鱼一条｜东方树叶梦男" : "Just a salted fish｜Dongfang Tea Leaf Dreamer";
+      document.getElementById("note").textContent = zh ? "这是我的树洞" : "This is my secret treehole";
+    }
+
+    let darkMode = true;
+    function toggleTheme() {
+      if (darkMode) {
+        document.documentElement.style.setProperty('--bg-color', '#ffffff');
+        document.documentElement.style.setProperty('--card-color', '#f9f9f9');
+        document.documentElement.style.setProperty('--text-color', '#222222');
+        document.documentElement.style.setProperty('--link-color', '#007bff');
+        document.documentElement.style.setProperty('--note-color', '#666666');
+      } else {
+        document.documentElement.style.setProperty('--bg-color', '#121212');
+        document.documentElement.style.setProperty('--card-color', '#1e1e1e');
+        document.documentElement.style.setProperty('--text-color', '#eeeeee');
+        document.documentElement.style.setProperty('--link-color', '#4fc3f7');
+        document.documentElement.style.setProperty('--note-color', '#aaaaaa');
+      }
+      darkMode = !darkMode;
+    }
+  </script>
+</body>
+</html>
