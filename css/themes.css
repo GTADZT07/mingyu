@@ -1,0 +1,42 @@
+/* 浅色主题（默认） */
+.light-theme {
+    --primary-color: #4a90e2;
+    --text-color: #333;
+    --bg-color: #fff;
+    --card-bg: #f5f5f5;
+    --border-color: #ddd;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+/* 深色主题 */
+.dark-theme {
+    --primary-color: #64b5f6;
+    --text-color: #e0e0e0;
+    --bg-color: #1a1a1a;
+    --card-bg: #2d2d2d;
+    --border-color: #404040;
+    --shadow-color: rgba(0, 0, 0, 0.3);
+}
+
+/* 主题切换动画 */
+body {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* 深色主题下的特殊样式 */
+.dark-theme .profile-card,
+.dark-theme .comments-section {
+    box-shadow: 0 2px 10px var(--shadow-color);
+}
+
+.dark-theme .comment-form textarea,
+.dark-theme .modal-content input {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
+.dark-theme .modal-content {
+    background-color: var(--card-bg);
+    box-shadow: 0 4px 20px var(--shadow-color);
+} 
