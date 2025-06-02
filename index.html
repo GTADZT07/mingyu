@@ -1,640 +1,322 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>鸣钰的个人网站</title>
-  <link rel="icon" href="avatar.jpg" type="image/jpeg">
-  <style>
-    :root {
-      --bg-color: #121212;
-      --card-bg: #1e1e1e;
-      --text-color: #eeeeee;
-      --link-color: #4fc3f7;
-      --note-color: #aaaaaa;
-      --primary-color: #4a90e2;
-      --danger-color: #e74c3c;
-    }
-    body {
-      min-height: 100vh;
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: var(--bg-color);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-    }
-    .main-card {
-      background: var(--card-bg);
-      border-radius: 20px;
-      box-shadow: 0 6px 24px rgba(0,0,0,0.25);
-      padding: 20px 16px 18px 16px;
-      max-width: 400px;
-      width: 100%;
-      text-align: center;
-      color: var(--text-color);
-      position: relative;
-      margin-top: 48px;
-      transition: box-shadow 0.3s;
-    }
-    .main-card:hover {
-      box-shadow: 0 12px 32px rgba(0,0,0,0.32);
-    }
-    .avatar {
-      width: 120px;
-      height: 120px;
-      object-fit: cover;
-      background: #0a0a0a;
-      border-radius: 50%;
-      margin-bottom: 18px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.55), 0 0 0 3px #181818;
-      border: none;
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    h1 {
-      margin: 10px 0 6px;
-      font-size: 2rem;
-      font-weight: bold;
-      letter-spacing: 2px;
-    }
-    .bio {
-      color: var(--note-color);
-      font-size: 1rem;
-      margin-bottom: 18px;
-    }
-    .links {
-      margin: 18px 0 8px 0;
-    }
-    .links a {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 10px 0;
-      text-decoration: none;
-      color: var(--link-color);
-      font-size: 1.08rem;
-      font-weight: 500;
-      transition: color 0.2s;
-    }
-    .links a:hover {
-      color: var(--primary-color);
-    }
-    .links img {
-      width: 22px;
-      height: 22px;
-      margin-right: 10px;
-      object-fit: contain;
-    }
-    .note {
-      font-size: 13px;
-      color: var(--note-color);
-      margin: 8px 0 0 0;
-    }
-    .action-group {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-      margin-top: 24px;
-      margin-bottom: 0;
-    }
-    .lang-switch, .theme-switch, .comment-switch {
-      display: block;
-      width: 80%;
-      margin: 0 auto;
-      font-size: 15px;
-      color: var(--link-color);
-      cursor: pointer;
-      padding: 8px 0;
-      border-radius: 8px;
-      background: none;
-      border: none;
-      transition: background 0.2s, color 0.2s;
-      outline: none;
-    }
-    .lang-switch:hover, .theme-switch:hover, .comment-switch:hover {
-      background: #232323;
-      color: var(--primary-color);
-    }
-    /* 评论区弹窗样式 */
-    .comment-panel {
-      position: fixed;
-      top: 0;
-      left: 100vw;
-      width: 100vw;
-      max-width: 420px;
-      height: 100vh;
-      background: var(--card-bg);
-      box-shadow: -4px 0 24px rgba(0,0,0,0.25);
-      z-index: 999;
-      transition: left 0.35s cubic-bezier(.77,0,.18,1);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 0;
-    }
-    .comment-panel.active {
-      left: calc(50vw - 210px);
-    }
-    .comment-panel .panel-inner {
-      width: 100%;
-      max-width: 400px;
-      margin: 0 auto;
-      padding: 32px 18px 18px 18px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .comment-panel h3 {
-      margin: 0 0 18px 0;
-      font-size: 1.15rem;
-      color: var(--primary-color);
-      letter-spacing: 1px;
-    }
-    .close-btn {
-      position: absolute;
-      top: 18px;
-      right: 24px;
-      font-size: 1.5rem;
-      color: var(--note-color);
-      background: none;
-      border: none;
-      cursor: pointer;
-      z-index: 1001;
-    }
-    #comments {
-      min-height: 32px;
-      margin-bottom: 10px;
-      width: 100%;
-    }
-    .comment-item {
-      background: rgba(255,255,255,0.04);
-      border-radius: 8px;
-      padding: 8px 10px;
-      margin-bottom: 8px;
-      font-size: 0.98rem;
-      word-break: break-all;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-    }
-    .comment-item .comment-header {
-      display: flex;
-      align-items: center;
-      margin-bottom: 2px;
-    }
-    .comment-item .comment-user {
-      color: var(--link-color);
-      font-weight: bold;
-      margin-right: 8px;
-    }
-    .comment-item .comment-time {
-      color: var(--note-color);
-      font-size: 0.85em;
-      margin-left: 8px;
-    }
-    .comment-actions {
-      margin-top: 4px;
-      display: flex;
-      gap: 12px;
-    }
-    .comment-actions button {
-      background: none;
-      border: none;
-      color: var(--link-color);
-      cursor: pointer;
-      font-size: 0.95em;
-      padding: 0 4px;
-      border-radius: 4px;
-      transition: background 0.2s;
-    }
-    .comment-actions button:hover {
-      background: var(--primary-color);
-      color: #fff;
-    }
-    .comment-panel textarea {
-      width: 100%;
-      border-radius: 8px;
-      border: 1px solid #444;
-      margin: 8px 0;
-      padding: 8px;
-      background: var(--bg-color);
-      color: var(--text-color);
-      resize: vertical;
-      min-height: 60px;
-    }
-    .comment-panel .submit-btn {
-      background: var(--link-color);
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      padding: 6px 16px;
-      cursor: pointer;
-      font-size: 1rem;
-      margin-top: 4px;
-      transition: background 0.2s;
-      width: 100%;
-    }
-    .comment-panel .submit-btn:hover {
-      background: var(--primary-color);
-    }
-    /* 管理员弹窗 */
-    #adminModal {
-      display: none;
-      position: fixed;
-      left: 0; top: 0; width: 100vw; height: 100vh;
-      background: rgba(0,0,0,0.5);
-      z-index: 2000;
-      align-items: center;
-      justify-content: center;
-    }
-    #adminModal .admin-inner {
-      background: var(--card-bg);
-      color: var(--text-color);
-      border-radius: 16px;
-      padding: 32px 24px;
-      min-width: 260px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.3);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    #adminModal input {
-      margin-bottom: 10px;
-      width: 90%;
-      padding: 8px;
-      border-radius: 8px;
-      border: 1px solid #444;
-      background: var(--bg-color);
-      color: var(--text-color);
-    }
-    #adminModal button {
-      background: var(--link-color);
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      padding: 6px 24px;
-      cursor: pointer;
-      margin-bottom: 8px;
-    }
-    #adminModal .close-admin {
-      background: none;
-      color: var(--note-color);
-      border: none;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-    /* 管理员后台 */
-    #adminPanel {
-      display: none;
-      position: fixed;
-      left: 0; top: 0; width: 100vw; height: 100vh;
-      background: rgba(0,0,0,0.7);
-      z-index: 3000;
-      align-items: center;
-      justify-content: center;
-    }
-    #adminPanel .panel-inner {
-      background: var(--card-bg);
-      color: var(--text-color);
-      border-radius: 16px;
-      padding: 32px 24px;
-      min-width: 320px;
-      max-width: 90vw;
-      max-height: 90vh;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.3);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      overflow-y: auto;
-    }
-    #adminPanel h3 {
-      margin-bottom: 18px;
-      color: var(--primary-color);
-    }
-    .admin-comment-list {
-      width: 100%;
-      margin-bottom: 12px;
-    }
-    .admin-comment-item {
-      background: rgba(255,255,255,0.04);
-      border-radius: 8px;
-      padding: 8px 10px;
-      margin-bottom: 8px;
-      font-size: 0.98rem;
-      word-break: break-all;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-    }
-    .admin-comment-header {
-      display: flex;
-      align-items: center;
-      margin-bottom: 2px;
-    }
-    .admin-comment-user {
-      color: var(--link-color);
-      font-weight: bold;
-      margin-right: 8px;
-    }
-    .admin-comment-time {
-      color: var(--note-color);
-      font-size: 0.85em;
-      margin-left: 8px;
-    }
-    .admin-comment-actions {
-      margin-top: 4px;
-      display: flex;
-      gap: 12px;
-    }
-    .admin-comment-actions button {
-      background: none;
-      border: none;
-      color: var(--danger-color);
-      cursor: pointer;
-      font-size: 0.95em;
-      padding: 0 4px;
-      border-radius: 4px;
-      transition: background 0.2s;
-    }
-    .admin-comment-actions button:hover {
-      background: var(--danger-color);
-      color: #fff;
-    }
-    #adminPanel .close-admin-panel {
-      background: none;
-      color: var(--note-color);
-      border: none;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-    @media (max-width: 500px) {
-      .main-card { padding: 18px 4vw; }
-      .avatar { width: 90px; height: 90px; }
-      .comment-panel { max-width: 100vw; left: 100vw; }
-      .comment-panel.active { left: 0; }
-      .action-group { width: 100%; }
-      .lang-switch, .theme-switch, .comment-switch { width: 96%; }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>鸣钰的个人网站</title>
+    <link rel="icon" href="avatar.jpg" type="image/jpeg">
+    <style>
+        :root {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-color: #eeeeee;
+            --link-color: #4fc3f7;
+            --note-color: #aaaaaa;
+            --primary-color: #4a90e2;
+        }
+        body {
+            min-height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+        .main-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 6px 24px rgba(0,0,0,0.25);
+            padding: 36px 32px 28px 32px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            color: var(--text-color);
+            position: relative;
+            margin-top: 48px;
+            transition: box-shadow 0.3s;
+        }
+        .main-card:hover {
+            box-shadow: 0 12px 32px rgba(0,0,0,0.32);
+        }
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--primary-color);
+            margin-bottom: 18px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        }
+        h1 {
+            margin: 10px 0 6px;
+            font-size: 2rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+        .bio {
+            color: var(--note-color);
+            font-size: 1rem;
+            margin-bottom: 18px;
+        }
+        .links {
+            margin: 18px 0 8px 0;
+        }
+        .links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 10px 0;
+            text-decoration: none;
+            color: var(--link-color);
+            font-size: 1.08rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .links a:hover {
+            color: var(--primary-color);
+        }
+        .links img {
+            width: 22px;
+            height: 22px;
+            margin-right: 10px;
+            border-radius: 5px;
+            background: #fff;
+            object-fit: contain;
+        }
+        .note {
+            font-size: 13px;
+            color: var(--note-color);
+            margin: 8px 0 0 0;
+        }
+        .lang-switch, .theme-switch {
+            display: inline-block;
+            margin: 16px 8px 0 8px;
+            font-size: 15px;
+            color: var(--link-color);
+            cursor: pointer;
+            padding: 4px 14px;
+            border-radius: 8px;
+            background: rgba(0,0,0,0.04);
+            border: 1px solid var(--link-color);
+            transition: background 0.2s, color 0.2s;
+        }
+        .lang-switch:hover, .theme-switch:hover {
+            background: var(--primary-color);
+            color: #fff;
+        }
+        .comment-section {
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            padding: 20px 18px 18px 18px;
+            max-width: 400px;
+            width: 100%;
+            margin: 32px auto 40px auto;
+            color: var(--text-color);
+        }
+        .comment-section h3 {
+            margin: 0 0 12px 0;
+            font-size: 1.15rem;
+            color: var(--primary-color);
+            letter-spacing: 1px;
+        }
+        #comments {
+            min-height: 32px;
+            margin-bottom: 10px;
+        }
+        .comment-item {
+            background: rgba(255,255,255,0.04);
+            border-radius: 8px;
+            padding: 8px 10px;
+            margin-bottom: 8px;
+            font-size: 0.98rem;
+            word-break: break-all;
+        }
+        .comment-item .comment-user {
+            color: var(--link-color);
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        .comment-item .comment-time {
+            color: var(--note-color);
+            font-size: 0.85em;
+            margin-left: 8px;
+        }
+        .comment-section textarea {
+            width: 100%;
+            border-radius: 8px;
+            border: 1px solid #444;
+            margin: 8px 0;
+            padding: 8px;
+            background: var(--bg-color);
+            color: var(--text-color);
+            resize: vertical;
+            min-height: 60px;
+        }
+        .comment-section button {
+            background: var(--link-color);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 6px 16px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 4px;
+            transition: background 0.2s;
+        }
+        .comment-section button:hover {
+            background: var(--primary-color);
+        }
+        .delete-btn {
+            background: #ff4d4f;
+            color: #fff;
+            border: none;
+            margin-left: 8px;
+            padding: 2px 8px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        @media (max-width: 500px) {
+            .main-card { padding: 18px 4vw; }
+            .avatar { width: 90px; height: 90px; }
+            .comment-section { padding: 12px 2vw; }
+        }
+    </style>
 </head>
 <body>
-  <div class="main-card" id="mainCard">
-    <img class="avatar" src="avatar.jpg" alt="头像">
-    <h1 id="name">鸣钰</h1>
-    <div class="bio" id="bio">咸鱼一条｜东方树叶梦男</div>
-    <div class="links">
-      <a href="https://space.bilibili.com/509224563" target="_blank"><img src="bilibili.png" alt="bilibili logo">鸣钰_Yuuki</a>
-      <a href="https://x.com/GTADZTbuzz" target="_blank"><img src="x.png" alt="x logo">鸣钰</a>
-      <a href="https://x.com/ChenNuo114514" target="_blank"><img src="x.png" alt="x logo">Nuo</a>
-      <div class="note" id="note">这是我的树洞</div>
-      <a href="https://t.me/GTADZT" target="_blank"><img src="telegram.png" alt="telegram logo">鸣钰</a>
+    <div class="main-card">
+        <img class="avatar" src="avatar.jpg" alt="头像">
+        <h1 id="name">鸣钰</h1>
+        <div class="bio" id="bio">咸鱼一条｜东方树叶梦男</div>
+        <div class="links">
+            <a href="https://space.bilibili.com/509224563" target="_blank"><img src="bilibili.png" alt="bilibili logo">鸣钰_Yuuki</a>
+            <a href="https://x.com/GTADZTbuzz" target="_blank"><img src="x.png" alt="x logo">鸣钰</a>
+            <a href="https://x.com/ChenNuo114514" target="_blank"><img src="x.png" alt="x logo">Nuo</a>
+            <div class="note" id="note">这是我的树洞</div>
+            <a href="https://t.me/GTADZT" target="_blank"><img src="telegram.png" alt="telegram logo">鸣钰</a>
+        </div>
+        <div class="lang-switch" id="langBtn" onclick="switchLang()">English</div>
+        <div class="theme-switch" onclick="toggleTheme()">切换主题</div>
     </div>
-    <div class="action-group">
-      <button class="lang-switch" id="langBtn" onclick="switchLang()">English</button>
-      <button class="theme-switch" onclick="toggleTheme()">切换主题</button>
-      <button class="comment-switch" onclick="openCommentPanel()">评论</button>
+
+    <!-- 评论区 -->
+    <div class="comment-section" id="commentSection">
+        <h3 id="commentTitle">评论区</h3>
+        <div id="comments"></div>
+        <textarea id="commentInput" placeholder="写下你的评论..."></textarea>
+        <button onclick="submitComment()">发表评论</button>
     </div>
-  </div>
 
-  <!-- 评论区弹窗 -->
-  <div class="comment-panel" id="commentPanel">
-    <button class="close-btn" onclick="closeCommentPanel()">×</button>
-    <div class="panel-inner">
-      <h3 id="commentTitle">评论区</h3>
-      <div id="comments"></div>
-      <textarea id="commentInput" placeholder="写下你的评论..."></textarea>
-      <button class="submit-btn" onclick="submitComment()">发表评论</button>
-    </div>
-  </div>
+    <script>
+        let zh = true;
+        let admin = false;
 
-  <!-- 管理员登录弹窗 -->
-  <div id="adminModal">
-    <div class="admin-inner">
-      <h3 style="margin-bottom:18px;">管理员登录</h3>
-      <input id="adminUser" placeholder="用户名">
-      <input id="adminPass" type="password" placeholder="密码">
-      <button onclick="adminLogin()">登录</button>
-      <button class="close-admin" onclick="closeAdminModal()">关闭</button>
-    </div>
-  </div>
-
-  <!-- 管理员后台 -->
-  <div id="adminPanel">
-    <div class="panel-inner">
-      <h3>评论管理后台</h3>
-      <div class="admin-comment-list" id="adminCommentList"></div>
-      <button class="close-admin-panel" onclick="closeAdminPanel()">关闭后台</button>
-    </div>
-  </div>
-
-  <script>
-    // 语言切换
-    let zh = true;
-    function switchLang() {
-      zh = !zh;
-      document.getElementById("name").textContent = zh ? "鸣钰" : "Mingyu";
-      document.getElementById("bio").textContent = zh ? "咸鱼一条｜东方树叶梦男" : "Just a salted fish｜Dongfang Tea Leaf Dreamer";
-      document.getElementById("note").textContent = zh ? "这是我的树洞" : "This is my secret treehole";
-      document.getElementById("langBtn").textContent = zh ? "English" : "中文";
-      document.getElementById("commentTitle").textContent = zh ? "评论区" : "Comments";
-      document.querySelector('.submit-btn').textContent = zh ? "发表评论" : "Post Comment";
-      document.getElementById('commentInput').placeholder = zh ? "写下你的评论..." : "Write your comment...";
-      document.querySelector('.comment-switch').textContent = zh ? "评论" : "Comments";
-      document.querySelector('#adminPanel h3').textContent = zh ? "评论管理后台" : "Admin Panel";
-      document.querySelector('.close-admin-panel').textContent = zh ? "关闭后台" : "Close";
-    }
-    // 主题切换
-    let darkMode = true;
-    function toggleTheme() {
-      if (darkMode) {
-        document.documentElement.style.setProperty('--bg-color', '#ffffff');
-        document.documentElement.style.setProperty('--card-bg', '#f9f9f9');
-        document.documentElement.style.setProperty('--text-color', '#222222');
-        document.documentElement.style.setProperty('--link-color', '#007bff');
-        document.documentElement.style.setProperty('--note-color', '#666666');
-        document.documentElement.style.setProperty('--primary-color', '#4a90e2');
-      } else {
-        document.documentElement.style.setProperty('--bg-color', '#121212');
-        document.documentElement.style.setProperty('--card-bg', '#1e1e1e');
-        document.documentElement.style.setProperty('--text-color', '#eeeeee');
-        document.documentElement.style.setProperty('--link-color', '#4fc3f7');
-        document.documentElement.style.setProperty('--note-color', '#aaaaaa');
-        document.documentElement.style.setProperty('--primary-color', '#4a90e2');
-      }
-      darkMode = !darkMode;
-    }
-
-    // 评论区弹窗逻辑
-    function openCommentPanel() {
-      document.getElementById('commentPanel').classList.add('active');
-    }
-    function closeCommentPanel() {
-      document.getElementById('commentPanel').classList.remove('active');
-    }
-    // 左滑手势
-    let startX = 0;
-    document.addEventListener('touchstart', e => {
-      startX = e.touches[0].clientX;
-    });
-    document.addEventListener('touchend', e => {
-      let endX = e.changedTouches[0].clientX;
-      if (startX - endX > 80) openCommentPanel();
-      if (endX - startX > 80) closeCommentPanel();
-    });
-
-    // 评论区逻辑
-    const apiUrl = 'https://api.gtadzt.top/api/comment';
-    async function loadComments() {
-      try {
-        const res = await fetch(apiUrl);
-        const data = await res.json();
-        const box = document.getElementById('comments');
-        box.innerHTML = '';
-        if (!data.length) {
-          box.innerHTML = `<div style='color:var(--note-color);font-size:0.98em;'>暂无评论</div>`;
+        function switchLang() {
+            zh = !zh;
+            document.getElementById("name").textContent = zh ? "鸣钰" : "Mingyu";
+            document.getElementById("bio").textContent = zh ? "咸鱼一条｜东方树叶梦男" : "Just a salted fish｜Dongfang Tea Leaf Dreamer";
+            document.getElementById("note").textContent = zh ? "这是我的树洞" : "This is my secret treehole";
+            document.getElementById("langBtn").textContent = zh ? "English" : "中文";
+            document.getElementById("commentTitle").textContent = zh ? "评论区" : "Comments";
+            document.querySelector('.comment-section button').textContent = zh ? "发表评论" : "Post Comment";
+            document.getElementById('commentInput').placeholder = zh ? "写下你的评论..." : "Write your comment...";
         }
-        data.forEach(c => {
-          const div = document.createElement('div');
-          div.className = 'comment-item';
-          div.innerHTML = `
-            <div class='comment-header'>
-              <span class='comment-user'>${c.username}</span>
-              <span class='comment-time'>${formatTime(c.timestamp)}</span>
-            </div>
-            <div>${c.content}</div>
-            <div class='comment-actions'>
-              <button onclick='likeComment("${c.id}")'>👍 ${c.likes || 0}</button>
-              <button onclick='replyComment("${c.id}", "${c.username}")'>${zh ? '回复' : 'Reply'}</button>
-            </div>
-          `;
-          box.appendChild(div);
+
+        function toggleTheme() {
+            if (darkMode) {
+                document.documentElement.style.setProperty('--bg-color', '#ffffff');
+                document.documentElement.style.setProperty('--card-bg', '#f9f9f9');
+                document.documentElement.style.setProperty('--text-color', '#222222');
+                document.documentElement.style.setProperty('--link-color', '#007bff');
+                document.documentElement.style.setProperty('--note-color', '#666666');
+            } else {
+                document.documentElement.style.setProperty('--bg-color', '#121212');
+                document.documentElement.style.setProperty('--card-bg', '#1e1e1e');
+                document.documentElement.style.setProperty('--text-color', '#eeeeee');
+                document.documentElement.style.setProperty('--link-color', '#4fc3f7');
+                document.documentElement.style.setProperty('--note-color', '#aaaaaa');
+            }
+            darkMode = !darkMode;
+        }
+
+        const apiUrl = 'https://api.gtadzt.top/api/comment';
+
+        async function loadComments() {
+            const res = await fetch(apiUrl);
+            const data = await res.json();
+            const box = document.getElementById('comments');
+            box.innerHTML = '';
+            if (!data.length) {
+                box.innerHTML = `<div style='color:var(--note-color);font-size:0.98em;'>暂无评论</div>`;
+            }
+            data.forEach(c => {
+                const div = document.createElement('div');
+                div.className = 'comment-item';
+                div.innerHTML = `<span class='comment-user'>${c.username}</span>${c.content}<span class='comment-time'>${formatTime(c.timestamp)}</span>`;
+                if (admin) {
+                    const btn = document.createElement('button');
+                    btn.textContent = '删除';
+                    btn.className = 'delete-btn';
+                    btn.onclick = () => deleteComment(c.id);
+                    div.appendChild(btn);
+                }
+                box.appendChild(div);
+            });
+        }
+
+        function formatTime(ts) {
+            if (!ts) return '';
+            const d = new Date(ts);
+            return d.toLocaleString();
+        }
+
+        async function submitComment() {
+            const content = document.getElementById('commentInput').value.trim();
+            if (!content) return;
+            let username = localStorage.getItem('username');
+            if (!username) {
+                username = prompt(zh ? '请输入昵称' : 'Enter your name');
+                if (!username) return;
+                localStorage.setItem('username', username);
+            }
+            await fetch(apiUrl, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ username, content, timestamp: new Date().toISOString() })
+            });
+            document.getElementById('commentInput').value = '';
+            loadComments();
+        }
+
+        async function deleteComment(id) {
+            const confirmDel = confirm('确定要删除这条评论吗？');
+            if (!confirmDel) return;
+            await fetch(apiUrl, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id })
+            });
+            loadComments();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'PageUp') {
+                if (!window._pressCount) window._pressCount = 0;
+                window._pressCount++;
+                if (window._pressCount >= 5) {
+                    admin = true;
+                    alert('后台模式已开启');
+                    loadComments();
+                }
+                setTimeout(() => window._pressCount = 0, 1500);
+            }
         });
-      } catch (e) {
-        document.getElementById('comments').innerHTML = `<div style='color:red;'>评论加载失败</div>`;
-      }
-    }
-    function formatTime(ts) {
-      if (!ts) return '';
-      const d = new Date(ts);
-      return d.toLocaleString();
-    }
-    async function submitComment() {
-      const content = document.getElementById('commentInput').value.trim();
-      if (!content) return;
-      let username = localStorage.getItem('username');
-      if (!username) {
-        username = prompt(zh ? '请输入昵称' : 'Enter your name');
-        if (!username) return;
-        // 密保设置
-        let pwd = prompt(zh ? '请设置密保（用于找回昵称）' : 'Set a password for name recovery');
-        if (!pwd) return;
-        localStorage.setItem('username', username);
-        localStorage.setItem('userpwd', pwd);
-      }
-      try {
-        await fetch(apiUrl, {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({
-            username,
-            content,
-            timestamp: new Date().toISOString()
-          })
-        });
-        document.getElementById('commentInput').value = '';
+
+        let darkMode = true;
         loadComments();
-      } catch (e) {
-        alert(zh ? '评论提交失败' : 'Failed to post comment');
-      }
-    }
-    // 点赞功能（需后端支持，暂为前端演示）
-    function likeComment(id) {
-      alert(zh ? '点赞功能需后端支持，如需实现请告知API格式' : 'Like feature needs backend support. Tell me the API if you want it.');
-    }
-    // 回复功能（前端弹窗，后端需支持回复结构）
-    function replyComment(id, user) {
-      let reply = prompt(zh ? `回复 @${user}：` : `Reply to @${user}:`);
-      if (!reply) return;
-      alert(zh ? '回复功能需后端支持，如需实现请告知API格式' : 'Reply feature needs backend support. Tell me the API if you want it.');
-    }
-    loadComments();
-
-    // PageUp 连续5次弹出管理员登录
-    let pageUpCount = 0;
-    document.addEventListener('keydown', e => {
-      if (e.key === 'PageUp') {
-        pageUpCount++;
-        if (pageUpCount >= 5) {
-          document.getElementById('adminModal').style.display = 'flex';
-          pageUpCount = 0;
-        }
-      } else {
-        pageUpCount = 0;
-      }
-    });
-
-    // 管理员登录逻辑
-    let isAdmin = false;
-    function adminLogin() {
-      const u = document.getElementById('adminUser').value;
-      const p = document.getElementById('adminPass').value;
-      if (u === 'GTADZT' && p === 'ASD246246') {
-        alert('登录成功！');
-        document.getElementById('adminModal').style.display = 'none';
-        isAdmin = true;
-        showAdminPanel();
-      } else {
-        alert('用户名或密码错误');
-      }
-    }
-    function closeAdminModal() {
-      document.getElementById('adminModal').style.display = 'none';
-    }
-
-    // 管理员后台
-    function showAdminPanel() {
-      document.getElementById('adminPanel').style.display = 'flex';
-      loadAdminComments();
-    }
-    function closeAdminPanel() {
-      document.getElementById('adminPanel').style.display = 'none';
-    }
-    async function loadAdminComments() {
-      try {
-        const res = await fetch(apiUrl);
-        const data = await res.json();
-        const box = document.getElementById('adminCommentList');
-        box.innerHTML = '';
-        if (!data.length) {
-          box.innerHTML = `<div style='color:var(--note-color);font-size:0.98em;'>暂无评论</div>`;
-        }
-        data.forEach(c => {
-          const div = document.createElement('div');
-          div.className = 'admin-comment-item';
-          div.innerHTML = `
-            <div class='admin-comment-header'>
-              <span class='admin-comment-user'>${c.username}</span>
-              <span class='admin-comment-time'>${formatTime(c.timestamp)}</span>
-            </div>
-            <div>${c.content}</div>
-            <div class='admin-comment-actions'>
-              <button onclick='deleteComment("${c.id}")'>删除</button>
-            </div>
-          `;
-          box.appendChild(div);
-        });
-      } catch (e) {
-        document.getElementById('adminCommentList').innerHTML = `<div style='color:red;'>评论加载失败</div>`;
-      }
-    }
-    // 删除评论（需后端支持，前端演示）
-    function deleteComment(id) {
-      alert('删除功能需后端支持，如需实现请告知API格式');
-    }
-  </script>
+    </script>
 </body>
-</html> 
+</html>
