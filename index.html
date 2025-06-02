@@ -29,7 +29,7 @@
       background: var(--card-bg);
       border-radius: 20px;
       box-shadow: 0 6px 24px rgba(0,0,0,0.25);
-      padding: 36px 32px 28px 32px;
+      padding: 20px 16px 18px 16px;
       max-width: 400px;
       width: 100%;
       text-align: center;
@@ -44,11 +44,15 @@
     .avatar {
       width: 120px;
       height: 120px;
-      border-radius: 50%;
       object-fit: cover;
-      border: 4px solid var(--primary-color);
+      background: #0a0a0a;
+      border-radius: 50%;
       margin-bottom: 18px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+      box-shadow: 0 4px 24px rgba(0,0,0,0.55), 0 0 0 3px #181818;
+      border: none;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
     }
     h1 {
       margin: 10px 0 6px;
@@ -82,8 +86,6 @@
       width: 22px;
       height: 22px;
       margin-right: 10px;
-      border-radius: 5px;
-      background: #fff;
       object-fit: contain;
     }
     .note {
@@ -91,21 +93,31 @@
       color: var(--note-color);
       margin: 8px 0 0 0;
     }
+    .action-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      margin-top: 24px;
+      margin-bottom: 0;
+    }
     .lang-switch, .theme-switch, .comment-switch {
-      display: inline-block;
-      margin: 16px 8px 0 8px;
+      display: block;
+      width: 80%;
+      margin: 0 auto;
       font-size: 15px;
       color: var(--link-color);
       cursor: pointer;
-      padding: 4px 14px;
+      padding: 8px 0;
       border-radius: 8px;
-      background: rgba(0,0,0,0.04);
-      border: 1px solid var(--link-color);
+      background: none;
+      border: none;
       transition: background 0.2s, color 0.2s;
+      outline: none;
     }
     .lang-switch:hover, .theme-switch:hover, .comment-switch:hover {
-      background: var(--primary-color);
-      color: #fff;
+      background: #232323;
+      color: var(--primary-color);
     }
     /* 评论区弹窗样式 */
     .comment-panel {
@@ -364,6 +376,8 @@
       .avatar { width: 90px; height: 90px; }
       .comment-panel { max-width: 100vw; left: 100vw; }
       .comment-panel.active { left: 0; }
+      .action-group { width: 100%; }
+      .lang-switch, .theme-switch, .comment-switch { width: 96%; }
     }
   </style>
 </head>
@@ -379,9 +393,11 @@
       <div class="note" id="note">这是我的树洞</div>
       <a href="https://t.me/GTADZT" target="_blank"><img src="telegram.png" alt="telegram logo">鸣钰</a>
     </div>
-    <div class="lang-switch" id="langBtn" onclick="switchLang()">English</div>
-    <div class="theme-switch" onclick="toggleTheme()">切换主题</div>
-    <div class="comment-switch" onclick="openCommentPanel()">评论</div>
+    <div class="action-group">
+      <button class="lang-switch" id="langBtn" onclick="switchLang()">English</button>
+      <button class="theme-switch" onclick="toggleTheme()">切换主题</button>
+      <button class="comment-switch" onclick="openCommentPanel()">评论</button>
+    </div>
   </div>
 
   <!-- 评论区弹窗 -->
