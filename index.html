@@ -5,15 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>鸣钰的个人网站</title>
     <link rel="icon" href="avatar.jpg" type="image/jpeg">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/themes.css">
     <style>
+        :root {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-color: #eeeeee;
+            --link-color: #4fc3f7;
+            --note-color: #aaaaaa;
+            --primary-color: #4a90e2;
+        }
         body {
             min-height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: var(--bg-color);
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            background: var(--bg-color);
+            justify-content: flex-start;
         }
         .main-card {
             background: var(--card-bg);
@@ -25,6 +34,7 @@
             text-align: center;
             color: var(--text-color);
             position: relative;
+            margin-top: 48px;
             transition: box-shadow 0.3s;
         }
         .main-card:hover {
@@ -96,9 +106,73 @@
             background: var(--primary-color);
             color: #fff;
         }
+        .comment-section {
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            padding: 20px 18px 18px 18px;
+            max-width: 400px;
+            width: 100%;
+            margin: 32px auto 40px auto;
+            color: var(--text-color);
+        }
+        .comment-section h3 {
+            margin: 0 0 12px 0;
+            font-size: 1.15rem;
+            color: var(--primary-color);
+            letter-spacing: 1px;
+        }
+        #comments {
+            min-height: 32px;
+            margin-bottom: 10px;
+        }
+        .comment-item {
+            background: rgba(255,255,255,0.04);
+            border-radius: 8px;
+            padding: 8px 10px;
+            margin-bottom: 8px;
+            font-size: 0.98rem;
+            word-break: break-all;
+        }
+        .comment-item .comment-user {
+            color: var(--link-color);
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        .comment-item .comment-time {
+            color: var(--note-color);
+            font-size: 0.85em;
+            margin-left: 8px;
+        }
+        .comment-section textarea {
+            width: 100%;
+            border-radius: 8px;
+            border: 1px solid #444;
+            margin: 8px 0;
+            padding: 8px;
+            background: var(--bg-color);
+            color: var(--text-color);
+            resize: vertical;
+            min-height: 60px;
+        }
+        .comment-section button {
+            background: var(--link-color);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 6px 16px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 4px;
+            transition: background 0.2s;
+        }
+        .comment-section button:hover {
+            background: var(--primary-color);
+        }
         @media (max-width: 500px) {
             .main-card { padding: 18px 4vw; }
             .avatar { width: 90px; height: 90px; }
+            .comment-section { padding: 12px 2vw; }
         }
     </style>
 </head>
@@ -117,7 +191,17 @@
         <div class="lang-switch" id="langBtn" onclick="switchLang()">English</div>
         <div class="theme-switch" onclick="toggleTheme()">切换主题</div>
     </div>
+
+    <!-- 评论区 -->
+    <div class="comment-section" id="commentSection">
+        <h3 id="commentTitle">评论区</h3>
+        <div id="comments"></div>
+        <textarea id="commentInput" placeholder="写下你的评论..."></textarea>
+        <button onclick="submitComment()">发表评论</button>
+    </div>
+
     <script>
+        // 语言切换
         let zh = true;
         function switchLang() {
             zh = !zh;
@@ -125,7 +209,11 @@
             document.getElementById("bio").textContent = zh ? "咸鱼一条｜东方树叶梦男" : "Just a salted fish｜Dongfang Tea Leaf Dreamer";
             document.getElementById("note").textContent = zh ? "这是我的树洞" : "This is my secret treehole";
             document.getElementById("langBtn").textContent = zh ? "English" : "中文";
+            document.getElementById("commentTitle").textContent = zh ? "评论区" : "Comments";
+            document.querySelector('.comment-section button').textContent = zh ? "发表评论" : "Post Comment";
+            document.getElementById('commentInput').placeholder = zh ? "写下你的评论..." : "Write your comment...";
         }
+        // 主题切换
         let darkMode = true;
         function toggleTheme() {
             if (darkMode) {
@@ -134,15 +222,69 @@
                 document.documentElement.style.setProperty('--text-color', '#222222');
                 document.documentElement.style.setProperty('--link-color', '#007bff');
                 document.documentElement.style.setProperty('--note-color', '#666666');
+                document.documentElement.style.setProperty('--primary-color', '#4a90e2');
             } else {
                 document.documentElement.style.setProperty('--bg-color', '#121212');
                 document.documentElement.style.setProperty('--card-bg', '#1e1e1e');
                 document.documentElement.style.setProperty('--text-color', '#eeeeee');
                 document.documentElement.style.setProperty('--link-color', '#4fc3f7');
                 document.documentElement.style.setProperty('--note-color', '#aaaaaa');
+                document.documentElement.style.setProperty('--primary-color', '#4a90e2');
             }
             darkMode = !darkMode;
         }
+        // 评论区逻辑
+        const apiUrl = 'http://66.112.211.213:8000/api/comment';
+        async function loadComments() {
+            try {
+                const res = await fetch(apiUrl);
+                const data = await res.json();
+                const box = document.getElementById('comments');
+                box.innerHTML = '';
+                if (!data.length) {
+                    box.innerHTML = `<div style='color:var(--note-color);font-size:0.98em;'>暂无评论</div>`;
+                }
+                data.forEach(c => {
+                    const div = document.createElement('div');
+                    div.className = 'comment-item';
+                    div.innerHTML = `<span class='comment-user'>${c.username}</span>${c.content}<span class='comment-time'>${formatTime(c.timestamp)}</span>`;
+                    box.appendChild(div);
+                });
+            } catch (e) {
+                document.getElementById('comments').innerHTML = `<div style='color:red;'>评论加载失败</div>`;
+            }
+        }
+        function formatTime(ts) {
+            if (!ts) return '';
+            const d = new Date(ts);
+            return d.toLocaleString();
+        }
+        async function submitComment() {
+            const content = document.getElementById('commentInput').value.trim();
+            if (!content) return;
+            let username = localStorage.getItem('username');
+            if (!username) {
+                username = prompt(zh ? '请输入昵称' : 'Enter your name');
+                if (!username) return;
+                localStorage.setItem('username', username);
+            }
+            try {
+                await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        username,
+                        content,
+                        timestamp: new Date().toISOString()
+                    })
+                });
+                document.getElementById('commentInput').value = '';
+                loadComments();
+            } catch (e) {
+                alert(zh ? '评论提交失败' : 'Failed to post comment');
+            }
+        }
+        loadComments();
     </script>
 </body>
 </html> 
