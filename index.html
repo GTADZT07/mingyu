@@ -286,5 +286,14 @@
         }
         loadComments();
     </script>
-</body>
+</body><!-- 管理员登录弹窗 -->
+<div id="adminModal" style="display:none; position:fixed; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.5); z-index:2000; align-items:center; justify-content:center;">
+  <div style="background:var(--card-bg); color:var(--text-color); border-radius:16px; padding:32px 24px; min-width:260px; box-shadow:0 4px 24px rgba(0,0,0,0.3); display:flex; flex-direction:column; align-items:center;">
+    <h3 style="margin-bottom:18px;">管理员登录</h3>
+    <input id="adminUser" placeholder="用户名" style="margin-bottom:10px; width:90%; padding:8px; border-radius:8px; border:1px solid #444;">
+    <input id="adminPass" type="password" placeholder="密码" style="margin-bottom:18px; width:90%; padding:8px; border-radius:8px; border:1px solid #444;">
+    <button onclick="adminLogin()" style="background:var(--link-color); color:#fff; border:none; border-radius:8px; padding:6px 24px; cursor:pointer;">登录</button>
+    <button onclick=\"closeAdminModal()\" style=\"margin-top:10px; background:none; color:var(--note-color); border:none; cursor:pointer;\">关闭</button>
+  </div>
+</div>
 </html> 
