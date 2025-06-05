@@ -329,7 +329,7 @@
       <h3 id="pmTitle">私信区</h3>
       <div id="pmList"></div>
       <textarea id="pmInput" placeholder="写下你的私信..."></textarea>
-      <button onclick="submitPM()">发送私信</button>
+      <button class="submit-btn" onclick="submitPM()">发送私信</button>
     </div>
   </div>
 
@@ -464,13 +464,20 @@
       const password = localStorage.getItem('pmPwd') || '';
       if (!content) return alert('内容不能为空');
       if (!from || !password) return alert('请先登录');
-      await fetch(pmApi, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({content, from, password, reply_to})
-      });
-      document.getElementById('pmInput').value = '';
-      loadPMs();
+      try {
+        const response = await fetch(pmApi, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({content, from, password, reply_to})
+        });
+        if (!response.ok) {
+          throw new Error('发送失败');
+        }
+        document.getElementById('pmInput').value = '';
+        await loadPMs();
+      } catch (error) {
+        alert('发送失败：' + error.message);
+      }
     }
     function replyToPM(reply_to) {
       const content = prompt('输入回复内容');
