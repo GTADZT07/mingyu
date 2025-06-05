@@ -132,4 +132,69 @@ button:hover {
     .comments-section {
         padding: 15px;
     }
+}
+
+.pm-section {
+  background: var(--card-bg);
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  padding: 18px;
+  max-width: 400px;
+  margin: 32px auto 0;
+  color: var(--text-color);
+}
+.pm-section textarea, .pm-section input {
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid #444;
+  margin: 8px 0;
+  padding: 8px;
+  background: var(--bg-color);
+  color: var(--text-color);
+}
+.pm-section button {
+  background: var(--link-color);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 16px;
+  cursor: pointer;
+  margin-top: 4px;
+}
+.pm-msg {
+  background: rgba(255,255,255,0.04);
+  border-radius: 8px;
+  padding: 8px 10px;
+  margin-bottom: 8px;
+  font-size: 0.98rem;
+  word-break: break-all;
+  position: relative;
+}
+.pm-msg .pm-meta {
+  font-size: 0.85em;
+  color: var(--note-color);
+  margin-bottom: 2px;
+}
+.pm-msg .pm-actions {
+  margin-top: 4px;
+  display: flex;
+  gap: 10px;
+}
+.pm-msg .pm-reply {
+  background: none;
+  color: var(--primary-color);
+  border: none;
+  cursor: pointer;
+  font-size: 0.95em;
+}
+.pm-msg .pm-delete {
+  background: none;
+  color: var(--danger-color);
+  border: none;
+  cursor: pointer;
+  font-size: 0.95em;
+}
+.pm-msg .pm-deleted {
+  color: var(--danger-color);
+  font-style: italic;
 } 
