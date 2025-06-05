@@ -101,7 +101,7 @@
       margin-top: 24px;
       margin-bottom: 0;
     }
-    .lang-switch, .theme-switch, .comment-switch {
+    .lang-switch, .theme-switch, .pm-switch {
       display: block;
       width: 80%;
       margin: 0 auto;
@@ -115,12 +115,12 @@
       transition: background 0.2s, color 0.2s;
       outline: none;
     }
-    .lang-switch:hover, .theme-switch:hover, .comment-switch:hover {
+    .lang-switch:hover, .theme-switch:hover, .pm-switch:hover {
       background: #232323;
       color: var(--primary-color);
     }
-    /* 评论区弹窗样式 */
-    .comment-panel {
+    /* 私信区弹窗样式 */
+    .pm-panel {
       position: fixed;
       top: 0;
       left: 100vw;
@@ -136,10 +136,10 @@
       align-items: center;
       padding: 0;
     }
-    .comment-panel.active {
+    .pm-panel.active {
       left: calc(50vw - 210px);
     }
-    .comment-panel .panel-inner {
+    .pm-panel .panel-inner {
       width: 100%;
       max-width: 400px;
       margin: 0 auto;
@@ -148,7 +148,7 @@
       flex-direction: column;
       align-items: center;
     }
-    .comment-panel h3 {
+    .pm-panel h3 {
       margin: 0 0 18px 0;
       font-size: 1.15rem;
       color: var(--primary-color);
@@ -165,13 +165,13 @@
       cursor: pointer;
       z-index: 1001;
     }
-    #comments {
+    #pmList {
       min-height: 32px;
       margin-bottom: 10px;
       width: 100%;
     }
-    .comment-item {
-      background: rgba(255,255,255,0.04);
+    .pm-msg {
+      background: #232323;
       border-radius: 8px;
       padding: 8px 10px;
       margin-bottom: 8px;
@@ -180,42 +180,54 @@
       width: 100%;
       display: flex;
       flex-direction: column;
+      position: relative;
     }
-    .comment-item .comment-header {
-      display: flex;
-      align-items: center;
+    .pm-msg .pm-meta {
+      font-size: 0.85em;
+      color: var(--note-color);
       margin-bottom: 2px;
     }
-    .comment-item .comment-user {
-      color: var(--link-color);
-      font-weight: bold;
-      margin-right: 8px;
-    }
-    .comment-item .comment-time {
-      color: var(--note-color);
-      font-size: 0.85em;
-      margin-left: 8px;
-    }
-    .comment-actions {
+    .pm-msg .pm-actions {
       margin-top: 4px;
       display: flex;
-      gap: 12px;
+      gap: 10px;
     }
-    .comment-actions button {
+    .pm-msg .pm-reply {
       background: none;
+      color: var(--primary-color);
       border: none;
-      color: var(--link-color);
       cursor: pointer;
       font-size: 0.95em;
-      padding: 0 4px;
-      border-radius: 4px;
-      transition: background 0.2s;
     }
-    .comment-actions button:hover {
-      background: var(--primary-color);
-      color: #fff;
+    .pm-msg .pm-delete {
+      background: none;
+      color: var(--danger-color);
+      border: none;
+      cursor: pointer;
+      font-size: 0.95em;
     }
-    .comment-panel textarea {
+    .pm-msg .pm-deleted {
+      color: var(--danger-color);
+      font-style: italic;
+    }
+    @media (max-width: 500px) {
+      .main-card { padding: 18px 4vw; }
+      .avatar { width: 90px; height: 90px; }
+      .pm-panel { max-width: 100vw; left: 100vw; }
+      .pm-panel.active { left: 0; }
+      .action-group { width: 100%; }
+      .lang-switch, .theme-switch, .pm-switch { width: 96%; }
+    }
+    .pm-section {
+      background: var(--card-bg);
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      padding: 18px;
+      max-width: 400px;
+      margin: 32px auto 0;
+      color: var(--text-color);
+    }
+    .pm-section textarea, .pm-section input {
       width: 100%;
       border-radius: 8px;
       border: 1px solid #444;
@@ -223,162 +235,62 @@
       padding: 8px;
       background: var(--bg-color);
       color: var(--text-color);
-      resize: vertical;
-      min-height: 60px;
     }
-    .comment-panel .submit-btn {
+    .pm-section button {
       background: var(--link-color);
       color: #fff;
       border: none;
       border-radius: 8px;
       padding: 6px 16px;
       cursor: pointer;
-      font-size: 1rem;
       margin-top: 4px;
-      transition: background 0.2s;
+    }
+    .pm-reply-btn {
+      background: none;
+      color: var(--primary-color);
+      border: none;
+      cursor: pointer;
+      font-size: 0.95em;
+      margin-left: 8px;
+    }
+    .pm-reply-thread {
+      margin-left: 18px;
+      border-left: 2px solid var(--primary-color);
+      padding-left: 10px;
+      margin-top: 6px;
+    }
+    .pm-panel textarea, .pm-panel input {
       width: 100%;
-    }
-    .comment-panel .submit-btn:hover {
-      background: var(--primary-color);
-    }
-    /* 管理员弹窗 */
-    #adminModal {
-      display: none;
-      position: fixed;
-      left: 0; top: 0; width: 100vw; height: 100vh;
-      background: rgba(0,0,0,0.5);
-      z-index: 2000;
-      align-items: center;
-      justify-content: center;
-    }
-    #adminModal .admin-inner {
-      background: var(--card-bg);
-      color: var(--text-color);
-      border-radius: 16px;
-      padding: 32px 24px;
-      min-width: 260px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.3);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    #adminModal input {
-      margin-bottom: 10px;
-      width: 90%;
-      padding: 8px;
       border-radius: 8px;
       border: 1px solid #444;
-      background: var(--bg-color);
-      color: var(--text-color);
+      margin: 8px 0;
+      padding: 8px;
+      background: #232323;
+      color: #fff;
+      font-size: 1rem;
     }
-    #adminModal button {
+    .pm-panel button {
       background: var(--link-color);
       color: #fff;
       border: none;
       border-radius: 8px;
-      padding: 6px 24px;
-      cursor: pointer;
-      margin-bottom: 8px;
-    }
-    #adminModal .close-admin {
-      background: none;
-      color: var(--note-color);
-      border: none;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-    /* 管理员后台 */
-    #adminPanel {
-      display: none;
-      position: fixed;
-      left: 0; top: 0; width: 100vw; height: 100vh;
-      background: rgba(0,0,0,0.7);
-      z-index: 3000;
-      align-items: center;
-      justify-content: center;
-    }
-    #adminPanel .panel-inner {
-      background: var(--card-bg);
-      color: var(--text-color);
-      border-radius: 16px;
-      padding: 32px 24px;
-      min-width: 320px;
-      max-width: 90vw;
-      max-height: 90vh;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.3);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      overflow-y: auto;
-    }
-    #adminPanel h3 {
-      margin-bottom: 18px;
-      color: var(--primary-color);
-    }
-    .admin-comment-list {
+      padding: 8px 0;
       width: 100%;
-      margin-bottom: 12px;
-    }
-    .admin-comment-item {
-      background: rgba(255,255,255,0.04);
-      border-radius: 8px;
-      padding: 8px 10px;
-      margin-bottom: 8px;
-      font-size: 0.98rem;
-      word-break: break-all;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-    }
-    .admin-comment-header {
-      display: flex;
-      align-items: center;
-      margin-bottom: 2px;
-    }
-    .admin-comment-user {
-      color: var(--link-color);
-      font-weight: bold;
-      margin-right: 8px;
-    }
-    .admin-comment-time {
-      color: var(--note-color);
-      font-size: 0.85em;
-      margin-left: 8px;
-    }
-    .admin-comment-actions {
-      margin-top: 4px;
-      display: flex;
-      gap: 12px;
-    }
-    .admin-comment-actions button {
-      background: none;
-      border: none;
-      color: var(--danger-color);
+      font-size: 1.08rem;
       cursor: pointer;
-      font-size: 0.95em;
-      padding: 0 4px;
-      border-radius: 4px;
+      margin-top: 8px;
       transition: background 0.2s;
     }
-    .admin-comment-actions button:hover {
-      background: var(--danger-color);
-      color: #fff;
+    .pm-panel button:hover {
+      background: var(--primary-color);
     }
-    #adminPanel .close-admin-panel {
-      background: none;
-      color: var(--note-color);
-      border: none;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-    @media (max-width: 500px) {
-      .main-card { padding: 18px 4vw; }
-      .avatar { width: 90px; height: 90px; }
-      .comment-panel { max-width: 100vw; left: 100vw; }
-      .comment-panel.active { left: 0; }
-      .action-group { width: 100%; }
-      .lang-switch, .theme-switch, .comment-switch { width: 96%; }
-    }
+    /* 登录弹窗 */
+    #pmLogin { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); z-index: 2000; display: flex; align-items: center; justify-content: center; }
+    #pmLogin .login-inner { background: #232323; border-radius: 16px; padding: 32px 24px; min-width: 260px; box-shadow: 0 4px 24px rgba(0,0,0,0.3); display: flex; flex-direction: column; align-items: center; }
+    #pmLogin input { width: 90%; padding: 8px; margin: 10px 0; border-radius: 8px; border: 1px solid #444; background: #181818; color: #fff; }
+    #pmLogin button { background: #4fc3f7; color: #fff; border: none; border-radius: 8px; padding: 8px 24px; cursor: pointer; }
+    #pmLogin button:hover { background: #4a90e2; }
+    #pmLogin .login-note { color: #888; font-size: 13px; margin-top: 12px; text-align: center; line-height: 1.4; }
   </style>
 </head>
 <body>
@@ -396,38 +308,28 @@
     <div class="action-group">
       <button class="lang-switch" id="langBtn" onclick="switchLang()">English</button>
       <button class="theme-switch" onclick="toggleTheme()">切换主题</button>
-      <button class="comment-switch" onclick="openCommentPanel()">评论</button>
+      <button class="pm-switch" onclick="openPMPanel()">私信</button>
     </div>
   </div>
 
-  <!-- 评论区弹窗 -->
-  <div class="comment-panel" id="commentPanel">
-    <button class="close-btn" onclick="closeCommentPanel()">×</button>
+  <!-- 私信登录弹窗 -->
+  <div id="pmLogin" style="display:none;">
+    <div class="login-inner">
+      <input id="pmLoginUser" placeholder="用户名">
+      <input id="pmLoginPwd" type="password" placeholder="密码">
+      <button onclick="pmDoLogin()">登录私信</button>
+      <div class="login-note">注：用户名和密码仅用于私信功能，无需任何验证，仅作为私信功能的标识使用</div>
+    </div>
+  </div>
+
+  <!-- 私信区弹窗 -->
+  <div class="pm-panel" id="pmPanel">
+    <button class="close-btn" onclick="closePMPanel()">×</button>
     <div class="panel-inner">
-      <h3 id="commentTitle">评论区</h3>
-      <div id="comments"></div>
-      <textarea id="commentInput" placeholder="写下你的评论..."></textarea>
-      <button class="submit-btn" onclick="submitComment()">发表评论</button>
-    </div>
-  </div>
-
-  <!-- 管理员登录弹窗 -->
-  <div id="adminModal">
-    <div class="admin-inner">
-      <h3 style="margin-bottom:18px;">管理员登录</h3>
-      <input id="adminUser" placeholder="用户名">
-      <input id="adminPass" type="password" placeholder="密码">
-      <button onclick="adminLogin()">登录</button>
-      <button class="close-admin" onclick="closeAdminModal()">关闭</button>
-    </div>
-  </div>
-
-  <!-- 管理员后台 -->
-  <div id="adminPanel">
-    <div class="panel-inner">
-      <h3>评论管理后台</h3>
-      <div class="admin-comment-list" id="adminCommentList"></div>
-      <button class="close-admin-panel" onclick="closeAdminPanel()">关闭后台</button>
+      <h3 id="pmTitle">私信区</h3>
+      <div id="pmList"></div>
+      <textarea id="pmInput" placeholder="写下你的私信..."></textarea>
+      <button onclick="submitPM()">发送私信</button>
     </div>
   </div>
 
@@ -440,12 +342,10 @@
       document.getElementById("bio").textContent = zh ? "咸鱼一条｜东方树叶梦男" : "Just a salted fish｜Dongfang Tea Leaf Dreamer";
       document.getElementById("note").textContent = zh ? "这是我的树洞" : "This is my secret treehole";
       document.getElementById("langBtn").textContent = zh ? "English" : "中文";
-      document.getElementById("commentTitle").textContent = zh ? "评论区" : "Comments";
-      document.querySelector('.submit-btn').textContent = zh ? "发表评论" : "Post Comment";
-      document.getElementById('commentInput').placeholder = zh ? "写下你的评论..." : "Write your comment...";
-      document.querySelector('.comment-switch').textContent = zh ? "评论" : "Comments";
-      document.querySelector('#adminPanel h3').textContent = zh ? "评论管理后台" : "Admin Panel";
-      document.querySelector('.close-admin-panel').textContent = zh ? "关闭后台" : "Close";
+      document.getElementById("pmTitle").textContent = zh ? "私信区" : "Private Messages";
+      document.querySelector('.submit-btn').textContent = zh ? "发送私信" : "Send Private Message";
+      document.getElementById('pmInput').placeholder = zh ? "写下你的私信..." : "Write your private message...";
+      document.querySelector('.pm-switch').textContent = zh ? "私信" : "Private Messages";
     }
     // 主题切换
     let darkMode = true;
@@ -468,12 +368,29 @@
       darkMode = !darkMode;
     }
 
-    // 评论区弹窗逻辑
-    function openCommentPanel() {
-      document.getElementById('commentPanel').classList.add('active');
+    // 登录弹窗逻辑
+    function pmDoLogin() {
+      const user = document.getElementById('pmLoginUser').value.trim();
+      const pwd = document.getElementById('pmLoginPwd').value.trim();
+      if (!user || !pwd) return alert('请输入用户名和密码');
+      localStorage.setItem('pmName', user);
+      localStorage.setItem('pmPwd', pwd);
+      document.getElementById('pmLogin').style.display = 'none';
+      loadPMs();
     }
-    function closeCommentPanel() {
-      document.getElementById('commentPanel').classList.remove('active');
+    // 私信区弹窗逻辑
+    function openPMPanel() {
+      const user = localStorage.getItem('pmName');
+      const pwd = localStorage.getItem('pmPwd');
+      if (!user || !pwd) {
+        document.getElementById('pmLogin').style.display = '';
+        return;
+      }
+      document.getElementById('pmPanel').classList.add('active');
+      loadPMs();
+    }
+    function closePMPanel() {
+      document.getElementById('pmPanel').classList.remove('active');
     }
     // 左滑手势
     let startX = 0;
@@ -482,159 +399,104 @@
     });
     document.addEventListener('touchend', e => {
       let endX = e.changedTouches[0].clientX;
-      if (startX - endX > 80) openCommentPanel();
-      if (endX - startX > 80) closeCommentPanel();
+      if (startX - endX > 80) openPMPanel();
+      if (endX - startX > 80) closePMPanel();
     });
 
-    // 评论区逻辑
-    const apiUrl = 'https://api.gtadzt.top/api/comment';
-    async function loadComments() {
-      try {
-        const res = await fetch(apiUrl);
-        const data = await res.json();
-        const box = document.getElementById('comments');
-        box.innerHTML = '';
-        if (!data.length) {
-          box.innerHTML = `<div style='color:var(--note-color);font-size:0.98em;'>暂无评论</div>`;
-        }
-        data.forEach(c => {
-          const div = document.createElement('div');
-          div.className = 'comment-item';
-          div.innerHTML = `
-            <div class='comment-header'>
-              <span class='comment-user'>${c.username}</span>
-              <span class='comment-time'>${formatTime(c.timestamp)}</span>
-            </div>
-            <div>${c.content}</div>
-            <div class='comment-actions'>
-              <button onclick='likeComment("${c.id}")'>👍 ${c.likes || 0}</button>
-              <button onclick='replyComment("${c.id}", "${c.username}")'>${zh ? '回复' : 'Reply'}</button>
-            </div>
-          `;
-          box.appendChild(div);
-        });
-      } catch (e) {
-        document.getElementById('comments').innerHTML = `<div style='color:red;'>评论加载失败</div>`;
+    // 私信区功能
+    const pmApi = 'https://api.gtadzt.top/pm';
+    let pmData = [];
+    async function loadPMs() {
+      const user = localStorage.getItem('pmName') || '';
+      const pwd = localStorage.getItem('pmPwd') || '';
+      if (!user || !pwd) {
+        document.getElementById('pmLogin').style.display = '';
+        document.getElementById('pmPanel').classList.remove('active');
+        return;
       }
+      const res = await fetch(pmApi + '?user=' + encodeURIComponent(user) + '&password=' + encodeURIComponent(pwd));
+      pmData = await res.json();
+      renderPMList();
     }
-    function formatTime(ts) {
-      if (!ts) return '';
-      const d = new Date(ts);
-      return d.toLocaleString();
+    function renderPMList() {
+      const box = document.getElementById('pmList');
+      box.innerHTML = '';
+      pmData.filter(msg => !msg.reply_to).forEach(msg => {
+        box.appendChild(renderPMItem(msg));
+      });
     }
-    async function submitComment() {
-      const content = document.getElementById('commentInput').value.trim();
+    function renderPMItem(msg) {
+      const div = document.createElement('div');
+      div.className = 'pm-msg' + (msg.deleted ? ' pm-deleted' : '');
+      div.innerHTML = `
+        <div class="pm-meta">${msg.from} | ${msg.timestamp}</div>
+        <div>${msg.deleted ? '（已删除）' : msg.content}</div>
+      `;
+      // 回复按钮
+      if (!msg.deleted) {
+        const replyBtn = document.createElement('button');
+        replyBtn.className = 'pm-reply-btn';
+        replyBtn.textContent = '回复';
+        replyBtn.onclick = () => replyToPM(msg.id);
+        div.appendChild(replyBtn);
+        // 删除按钮（仅自己可见）
+        if (msg.from === (localStorage.getItem('pmName') || '匿名')) {
+          const delBtn = document.createElement('button');
+          delBtn.className = 'pm-delete';
+          delBtn.textContent = '删除';
+          delBtn.onclick = () => deletePM(msg.id);
+          div.appendChild(delBtn);
+        }
+      }
+      // 渲染回复（楼中楼）
+      const replies = pmData.filter(m => m.reply_to === msg.id);
+      if (replies.length) {
+        const thread = document.createElement('div');
+        thread.className = 'pm-reply-thread';
+        replies.forEach(r => thread.appendChild(renderPMItem(r)));
+        div.appendChild(thread);
+      }
+      return div;
+    }
+    async function submitPM(reply_to = null) {
+      const content = document.getElementById('pmInput').value.trim();
+      const from = localStorage.getItem('pmName') || '';
+      const password = localStorage.getItem('pmPwd') || '';
+      if (!content) return alert('内容不能为空');
+      if (!from || !password) return alert('请先登录');
+      await fetch(pmApi, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({content, from, password, reply_to})
+      });
+      document.getElementById('pmInput').value = '';
+      loadPMs();
+    }
+    function replyToPM(reply_to) {
+      const content = prompt('输入回复内容');
+      const from = localStorage.getItem('pmName') || '';
+      const password = localStorage.getItem('pmPwd') || '';
       if (!content) return;
-      let username = localStorage.getItem('username');
-      if (!username) {
-        username = prompt(zh ? '请输入昵称' : 'Enter your name');
-        if (!username) return;
-        // 密保设置
-        let pwd = prompt(zh ? '请设置密保（用于找回昵称）' : 'Set a password for name recovery');
-        if (!pwd) return;
-        localStorage.setItem('username', username);
-        localStorage.setItem('userpwd', pwd);
-      }
-      try {
-        await fetch(apiUrl, {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({
-            username,
-            content,
-            timestamp: new Date().toISOString()
-          })
-        });
-        document.getElementById('commentInput').value = '';
-        loadComments();
-      } catch (e) {
-        alert(zh ? '评论提交失败' : 'Failed to post comment');
-      }
+      fetch(pmApi, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({content, from, password, reply_to})
+      }).then(loadPMs);
     }
-    // 点赞功能（需后端支持，暂为前端演示）
-    function likeComment(id) {
-      alert(zh ? '点赞功能需后端支持，如需实现请告知API格式' : 'Like feature needs backend support. Tell me the API if you want it.');
+    async function deletePM(id) {
+      const from = localStorage.getItem('pmName') || '';
+      const password = localStorage.getItem('pmPwd') || '';
+      await fetch(pmApi + '/delete', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({id, from, password})
+      });
+      loadPMs();
     }
-    // 回复功能（前端弹窗，后端需支持回复结构）
-    function replyComment(id, user) {
-      let reply = prompt(zh ? `回复 @${user}：` : `Reply to @${user}:`);
-      if (!reply) return;
-      alert(zh ? '回复功能需后端支持，如需实现请告知API格式' : 'Reply feature needs backend support. Tell me the API if you want it.');
-    }
-    loadComments();
-
-    // PageUp 连续5次弹出管理员登录
-    let pageUpCount = 0;
-    document.addEventListener('keydown', e => {
-      if (e.key === 'PageUp') {
-        pageUpCount++;
-        if (pageUpCount >= 5) {
-          document.getElementById('adminModal').style.display = 'flex';
-          pageUpCount = 0;
-        }
-      } else {
-        pageUpCount = 0;
-      }
+    // 页面加载时自动弹出登录
+    document.addEventListener('DOMContentLoaded', function() {
+      // 初始化其他功能
     });
-
-    // 管理员登录逻辑
-    let isAdmin = false;
-    function adminLogin() {
-      const u = document.getElementById('adminUser').value;
-      const p = document.getElementById('adminPass').value;
-      if (u === 'GTADZT' && p === 'ASD246246') {
-        alert('登录成功！');
-        document.getElementById('adminModal').style.display = 'none';
-        isAdmin = true;
-        showAdminPanel();
-      } else {
-        alert('用户名或密码错误');
-      }
-    }
-    function closeAdminModal() {
-      document.getElementById('adminModal').style.display = 'none';
-    }
-
-    // 管理员后台
-    function showAdminPanel() {
-      document.getElementById('adminPanel').style.display = 'flex';
-      loadAdminComments();
-    }
-    function closeAdminPanel() {
-      document.getElementById('adminPanel').style.display = 'none';
-    }
-    async function loadAdminComments() {
-      try {
-        const res = await fetch(apiUrl);
-        const data = await res.json();
-        const box = document.getElementById('adminCommentList');
-        box.innerHTML = '';
-        if (!data.length) {
-          box.innerHTML = `<div style='color:var(--note-color);font-size:0.98em;'>暂无评论</div>`;
-        }
-        data.forEach(c => {
-          const div = document.createElement('div');
-          div.className = 'admin-comment-item';
-          div.innerHTML = `
-            <div class='admin-comment-header'>
-              <span class='admin-comment-user'>${c.username}</span>
-              <span class='admin-comment-time'>${formatTime(c.timestamp)}</span>
-            </div>
-            <div>${c.content}</div>
-            <div class='admin-comment-actions'>
-              <button onclick='deleteComment("${c.id}")'>删除</button>
-            </div>
-          `;
-          box.appendChild(div);
-        });
-      } catch (e) {
-        document.getElementById('adminCommentList').innerHTML = `<div style='color:red;'>评论加载失败</div>`;
-      }
-    }
-    // 删除评论（需后端支持，前端演示）
-    function deleteComment(id) {
-      alert('删除功能需后端支持，如需实现请告知API格式');
-    }
   </script>
 </body>
 </html> 
