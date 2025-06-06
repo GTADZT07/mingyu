@@ -8,296 +8,74 @@
   <style>
     :root {
       --bg-color: #121212;
-      --card-bg: #1e1e1e;
+      --card-color: #1e1e1e;
       --text-color: #eeeeee;
       --link-color: #4fc3f7;
       --note-color: #aaaaaa;
-      --primary-color: #4a90e2;
-      --danger-color: #e74c3c;
     }
     body {
-      min-height: 100vh;
       margin: 0;
       font-family: Arial, sans-serif;
       background-color: var(--bg-color);
       display: flex;
-      flex-direction: column;
+      justify-content: center;
       align-items: center;
-      justify-content: flex-start;
+      height: 100vh;
     }
-    .main-card {
-      background: var(--card-bg);
-      border-radius: 20px;
-      box-shadow: 0 6px 24px rgba(0,0,0,0.25);
-      padding: 20px 16px 18px 16px;
+    .card {
+      background: var(--card-color);
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      padding: 24px;
       max-width: 400px;
-      width: 100%;
       text-align: center;
       color: var(--text-color);
-      position: relative;
-      margin-top: 48px;
-      transition: box-shadow 0.3s;
-    }
-    .main-card:hover {
-      box-shadow: 0 12px 32px rgba(0,0,0,0.32);
     }
     .avatar {
-      width: 120px;
-      height: 120px;
-      object-fit: cover;
-      background: #0a0a0a;
+      width: 150px;
+      height: 150px;
       border-radius: 50%;
-      margin-bottom: 18px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.55), 0 0 0 3px #181818;
-      border: none;
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
+      object-fit: cover;
+      border: 4px solid #444;
     }
     h1 {
-      margin: 10px 0 6px;
-      font-size: 2rem;
-      font-weight: bold;
-      letter-spacing: 2px;
+      margin: 16px 0 8px;
     }
-    .bio {
-      color: var(--note-color);
-      font-size: 1rem;
-      margin-bottom: 18px;
-    }
-    .links {
-      margin: 18px 0 8px 0;
+    p {
+      color: var(--text-color);
     }
     .links a {
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 10px 0;
+      margin: 8px 0;
       text-decoration: none;
       color: var(--link-color);
-      font-size: 1.08rem;
-      font-weight: 500;
-      transition: color 0.2s;
+      font-size: 16px;
     }
-    .links a:hover {
-      color: var(--primary-color);
-    }
-    .links img {
-      width: 22px;
-      height: 22px;
-      margin-right: 10px;
-      object-fit: contain;
+    .links a img {
+      width: 20px;
+      height: 20px;
+      margin-right: 8px;
     }
     .note {
-      font-size: 13px;
+      font-size: 12px;
       color: var(--note-color);
-      margin: 8px 0 0 0;
+      margin-top: -4px;
     }
-    .action-group {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-      margin-top: 24px;
-      margin-bottom: 0;
-    }
-    .lang-switch, .theme-switch, .pm-switch {
-      display: block;
-      width: 80%;
-      margin: 0 auto;
-      font-size: 15px;
+    .lang-switch, .theme-switch {
+      margin-top: 12px;
+      font-size: 14px;
       color: var(--link-color);
       cursor: pointer;
-      padding: 8px 0;
-      border-radius: 8px;
-      background: none;
-      border: none;
-      transition: background 0.2s, color 0.2s;
-      outline: none;
     }
-    .lang-switch:hover, .theme-switch:hover, .pm-switch:hover {
-      background: #232323;
-      color: var(--primary-color);
-    }
-    /* 私信区弹窗样式 */
-    .pm-panel {
-      position: fixed;
-      top: 0;
-      left: 100vw;
-      width: 100vw;
-      max-width: 420px;
-      height: 100vh;
-      background: var(--card-bg);
-      box-shadow: -4px 0 24px rgba(0,0,0,0.25);
-      z-index: 999;
-      transition: left 0.35s cubic-bezier(.77,0,.18,1);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 0;
-    }
-    .pm-panel.active {
-      left: calc(50vw - 210px);
-    }
-    .pm-panel .panel-inner {
-      width: 100%;
-      max-width: 400px;
-      margin: 0 auto;
-      padding: 32px 18px 18px 18px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .pm-panel h3 {
-      margin: 0 0 18px 0;
-      font-size: 1.15rem;
-      color: var(--primary-color);
-      letter-spacing: 1px;
-    }
-    .close-btn {
-      position: absolute;
-      top: 18px;
-      right: 24px;
-      font-size: 1.5rem;
-      color: var(--note-color);
-      background: none;
-      border: none;
-      cursor: pointer;
-      z-index: 1001;
-    }
-    #pmList {
-      min-height: 32px;
-      margin-bottom: 10px;
-      width: 100%;
-    }
-    .pm-msg {
-      background: #232323;
-      border-radius: 8px;
-      padding: 8px 10px;
-      margin-bottom: 8px;
-      font-size: 0.98rem;
-      word-break: break-all;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-    }
-    .pm-msg .pm-meta {
-      font-size: 0.85em;
-      color: var(--note-color);
-      margin-bottom: 2px;
-    }
-    .pm-msg .pm-actions {
-      margin-top: 4px;
-      display: flex;
-      gap: 10px;
-    }
-    .pm-msg .pm-reply {
-      background: none;
-      color: var(--primary-color);
-      border: none;
-      cursor: pointer;
-      font-size: 0.95em;
-    }
-    .pm-msg .pm-delete {
-      background: none;
-      color: var(--danger-color);
-      border: none;
-      cursor: pointer;
-      font-size: 0.95em;
-    }
-    .pm-msg .pm-deleted {
-      color: var(--danger-color);
-      font-style: italic;
-    }
-    @media (max-width: 500px) {
-      .main-card { padding: 18px 4vw; }
-      .avatar { width: 90px; height: 90px; }
-      .pm-panel { max-width: 100vw; left: 100vw; }
-      .pm-panel.active { left: 0; }
-      .action-group { width: 100%; }
-      .lang-switch, .theme-switch, .pm-switch { width: 96%; }
-    }
-    .pm-section {
-      background: var(--card-bg);
-      border-radius: 16px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-      padding: 18px;
-      max-width: 400px;
-      margin: 32px auto 0;
-      color: var(--text-color);
-    }
-    .pm-section textarea, .pm-section input {
-      width: 100%;
-      border-radius: 8px;
-      border: 1px solid #444;
-      margin: 8px 0;
-      padding: 8px;
-      background: var(--bg-color);
-      color: var(--text-color);
-    }
-    .pm-section button {
-      background: var(--link-color);
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      padding: 6px 16px;
-      cursor: pointer;
-      margin-top: 4px;
-    }
-    .pm-reply-btn {
-      background: none;
-      color: var(--primary-color);
-      border: none;
-      cursor: pointer;
-      font-size: 0.95em;
-      margin-left: 8px;
-    }
-    .pm-reply-thread {
-      margin-left: 18px;
-      border-left: 2px solid var(--primary-color);
-      padding-left: 10px;
-      margin-top: 6px;
-    }
-    .pm-panel textarea, .pm-panel input {
-      width: 100%;
-      border-radius: 8px;
-      border: 1px solid #444;
-      margin: 8px 0;
-      padding: 8px;
-      background: #232323;
-      color: #fff;
-      font-size: 1rem;
-    }
-    .pm-panel button {
-      background: var(--link-color);
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      padding: 8px 0;
-      width: 100%;
-      font-size: 1.08rem;
-      cursor: pointer;
-      margin-top: 8px;
-      transition: background 0.2s;
-    }
-    .pm-panel button:hover {
-      background: var(--primary-color);
-    }
-    /* 登录弹窗 */
-    #pmLogin { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); z-index: 2000; display: flex; align-items: center; justify-content: center; }
-    #pmLogin .login-inner { background: #232323; border-radius: 16px; padding: 32px 24px; min-width: 260px; box-shadow: 0 4px 24px rgba(0,0,0,0.3); display: flex; flex-direction: column; align-items: center; }
-    #pmLogin input { width: 90%; padding: 8px; margin: 10px 0; border-radius: 8px; border: 1px solid #444; background: #181818; color: #fff; }
-    #pmLogin button { background: #4fc3f7; color: #fff; border: none; border-radius: 8px; padding: 8px 24px; cursor: pointer; }
-    #pmLogin button:hover { background: #4a90e2; }
-    #pmLogin .login-note { color: #888; font-size: 13px; margin-top: 12px; text-align: center; line-height: 1.4; }
   </style>
 </head>
 <body>
-  <div class="main-card" id="mainCard">
+  <div class="card">
     <img class="avatar" src="avatar.jpg" alt="头像">
     <h1 id="name">鸣钰</h1>
-    <div class="bio" id="bio">咸鱼一条｜东方树叶梦男</div>
+    <p id="bio">咸鱼一条｜东方树叶梦男</p>
     <div class="links">
       <a href="https://space.bilibili.com/509224563" target="_blank"><img src="bilibili.png" alt="bilibili logo">鸣钰_Yuuki</a>
       <a href="https://x.com/GTADZTbuzz" target="_blank"><img src="x.png" alt="x logo">鸣钰</a>
@@ -305,36 +83,11 @@
       <div class="note" id="note">这是我的树洞</div>
       <a href="https://t.me/GTADZT" target="_blank"><img src="telegram.png" alt="telegram logo">鸣钰</a>
     </div>
-    <div class="action-group">
-      <button class="lang-switch" id="langBtn" onclick="switchLang()">English</button>
-      <button class="theme-switch" onclick="toggleTheme()">切换主题</button>
-      <button class="pm-switch" onclick="openPMPanel()">私信</button>
-    </div>
-  </div>
-
-  <!-- 私信登录弹窗 -->
-  <div id="pmLogin" style="display:none;">
-    <div class="login-inner">
-      <input id="pmLoginUser" placeholder="用户名">
-      <input id="pmLoginPwd" type="password" placeholder="密码">
-      <button onclick="pmDoLogin()">登录私信</button>
-      <div class="login-note">注：用户名和密码仅用于私信功能，无需任何验证，仅作为私信功能的标识使用</div>
-    </div>
-  </div>
-
-  <!-- 私信区弹窗 -->
-  <div class="pm-panel" id="pmPanel">
-    <button class="close-btn" onclick="closePMPanel()">×</button>
-    <div class="panel-inner">
-      <h3 id="pmTitle">私信区</h3>
-      <div id="pmList"></div>
-      <textarea id="pmInput" placeholder="写下你的私信..."></textarea>
-      <button class="submit-btn" onclick="submitPM()">发送私信</button>
-    </div>
+    <div class="lang-switch" id="langBtn" onclick="switchLang()">English</div>
+    <div class="theme-switch" onclick="toggleTheme()">切换主题</div>
   </div>
 
   <script>
-    // 语言切换
     let zh = true;
     function switchLang() {
       zh = !zh;
@@ -342,168 +95,25 @@
       document.getElementById("bio").textContent = zh ? "咸鱼一条｜东方树叶梦男" : "Just a salted fish｜Dongfang Tea Leaf Dreamer";
       document.getElementById("note").textContent = zh ? "这是我的树洞" : "This is my secret treehole";
       document.getElementById("langBtn").textContent = zh ? "English" : "中文";
-      document.getElementById("pmTitle").textContent = zh ? "私信区" : "Private Messages";
-      document.querySelector('.submit-btn').textContent = zh ? "发送私信" : "Send Private Message";
-      document.getElementById('pmInput').placeholder = zh ? "写下你的私信..." : "Write your private message...";
-      document.querySelector('.pm-switch').textContent = zh ? "私信" : "Private Messages";
     }
-    // 主题切换
+
     let darkMode = true;
     function toggleTheme() {
       if (darkMode) {
         document.documentElement.style.setProperty('--bg-color', '#ffffff');
-        document.documentElement.style.setProperty('--card-bg', '#f9f9f9');
+        document.documentElement.style.setProperty('--card-color', '#f9f9f9');
         document.documentElement.style.setProperty('--text-color', '#222222');
         document.documentElement.style.setProperty('--link-color', '#007bff');
         document.documentElement.style.setProperty('--note-color', '#666666');
-        document.documentElement.style.setProperty('--primary-color', '#4a90e2');
       } else {
         document.documentElement.style.setProperty('--bg-color', '#121212');
-        document.documentElement.style.setProperty('--card-bg', '#1e1e1e');
+        document.documentElement.style.setProperty('--card-color', '#1e1e1e');
         document.documentElement.style.setProperty('--text-color', '#eeeeee');
         document.documentElement.style.setProperty('--link-color', '#4fc3f7');
         document.documentElement.style.setProperty('--note-color', '#aaaaaa');
-        document.documentElement.style.setProperty('--primary-color', '#4a90e2');
       }
       darkMode = !darkMode;
     }
-
-    // 登录弹窗逻辑
-    function pmDoLogin() {
-      const user = document.getElementById('pmLoginUser').value.trim();
-      const pwd = document.getElementById('pmLoginPwd').value.trim();
-      if (!user || !pwd) return alert('请输入用户名和密码');
-      localStorage.setItem('pmName', user);
-      localStorage.setItem('pmPwd', pwd);
-      document.getElementById('pmLogin').style.display = 'none';
-      loadPMs();
-    }
-    // 私信区弹窗逻辑
-    function openPMPanel() {
-      const user = localStorage.getItem('pmName');
-      const pwd = localStorage.getItem('pmPwd');
-      if (!user || !pwd) {
-        document.getElementById('pmLogin').style.display = '';
-        return;
-      }
-      document.getElementById('pmPanel').classList.add('active');
-      loadPMs();
-    }
-    function closePMPanel() {
-      document.getElementById('pmPanel').classList.remove('active');
-    }
-    // 左滑手势
-    let startX = 0;
-    document.addEventListener('touchstart', e => {
-      startX = e.touches[0].clientX;
-    });
-    document.addEventListener('touchend', e => {
-      let endX = e.changedTouches[0].clientX;
-      if (startX - endX > 80) openPMPanel();
-      if (endX - startX > 80) closePMPanel();
-    });
-
-    // 私信区功能
-    const pmApi = 'https://api.gtadzt.top/pm';
-    let pmData = [];
-    async function loadPMs() {
-      const user = localStorage.getItem('pmName') || '';
-      const pwd = localStorage.getItem('pmPwd') || '';
-      if (!user || !pwd) {
-        document.getElementById('pmLogin').style.display = '';
-        document.getElementById('pmPanel').classList.remove('active');
-        return;
-      }
-      const res = await fetch(pmApi + '?user=' + encodeURIComponent(user) + '&password=' + encodeURIComponent(pwd));
-      pmData = await res.json();
-      renderPMList();
-    }
-    function renderPMList() {
-      const box = document.getElementById('pmList');
-      box.innerHTML = '';
-      pmData.filter(msg => !msg.reply_to).forEach(msg => {
-        box.appendChild(renderPMItem(msg));
-      });
-    }
-    function renderPMItem(msg) {
-      const div = document.createElement('div');
-      div.className = 'pm-msg' + (msg.deleted ? ' pm-deleted' : '');
-      div.innerHTML = `
-        <div class="pm-meta">${msg.from} | ${msg.timestamp}</div>
-        <div>${msg.deleted ? '（已删除）' : msg.content}</div>
-      `;
-      // 回复按钮
-      if (!msg.deleted) {
-        const replyBtn = document.createElement('button');
-        replyBtn.className = 'pm-reply-btn';
-        replyBtn.textContent = '回复';
-        replyBtn.onclick = () => replyToPM(msg.id);
-        div.appendChild(replyBtn);
-        // 删除按钮（仅自己可见）
-        if (msg.from === (localStorage.getItem('pmName') || '匿名')) {
-          const delBtn = document.createElement('button');
-          delBtn.className = 'pm-delete';
-          delBtn.textContent = '删除';
-          delBtn.onclick = () => deletePM(msg.id);
-          div.appendChild(delBtn);
-        }
-      }
-      // 渲染回复（楼中楼）
-      const replies = pmData.filter(m => m.reply_to === msg.id);
-      if (replies.length) {
-        const thread = document.createElement('div');
-        thread.className = 'pm-reply-thread';
-        replies.forEach(r => thread.appendChild(renderPMItem(r)));
-        div.appendChild(thread);
-      }
-      return div;
-    }
-    async function submitPM(reply_to = null) {
-      const content = document.getElementById('pmInput').value.trim();
-      const from = localStorage.getItem('pmName') || '';
-      const password = localStorage.getItem('pmPwd') || '';
-      if (!content) return alert('内容不能为空');
-      if (!from || !password) return alert('请先登录');
-      try {
-        const response = await fetch(pmApi, {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({content, from, password, reply_to})
-        });
-        if (!response.ok) {
-          throw new Error('发送失败');
-        }
-        document.getElementById('pmInput').value = '';
-        await loadPMs();
-      } catch (error) {
-        alert('发送失败：' + error.message);
-      }
-    }
-    function replyToPM(reply_to) {
-      const content = prompt('输入回复内容');
-      const from = localStorage.getItem('pmName') || '';
-      const password = localStorage.getItem('pmPwd') || '';
-      if (!content) return;
-      fetch(pmApi, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({content, from, password, reply_to})
-      }).then(loadPMs);
-    }
-    async function deletePM(id) {
-      const from = localStorage.getItem('pmName') || '';
-      const password = localStorage.getItem('pmPwd') || '';
-      await fetch(pmApi + '/delete', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({id, from, password})
-      });
-      loadPMs();
-    }
-    // 页面加载时自动弹出登录
-    document.addEventListener('DOMContentLoaded', function() {
-      // 初始化其他功能
-    });
   </script>
 </body>
-</html> 
+</html>
