@@ -18,6 +18,7 @@
       font-family: Arial, sans-serif;
       background-color: var(--bg-color);
       display: flex;
+      flex-direction: column; 
       justify-content: center;
       align-items: center;
       height: 100vh;
@@ -85,8 +86,7 @@
     <div class="lang-switch" id="langBtn" onclick="switchLang()">English</div>
     <div class="theme-switch" onclick="toggleTheme()">切换主题</div>
   </div>
-  <p class="note">📧 gtadzt@gmail.com</p>
-
+  <p class="note" id="note">📧 gtadzt@gmail.com</p>
   <script>
     let zh = true;
     function switchLang() {
